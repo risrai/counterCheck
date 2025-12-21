@@ -9,22 +9,13 @@ req.onupgradeneeded = e => {
 
 req.onsuccess = e => {
   db = e.target.result;
-
-  if (window.onDbReady) {
-    window.onDbReady();
-  }
+  //if (window.loadUI) loadUI();
+  if (window.onDbReady) window.onDbReady();
 };
-
 
 function addEvent(type) {
   const tx = db.transaction("events", "readwrite");
   tx.objectStore("events").add({ type, timestamp: Date.now() });
-  tx.oncomplete = () => window.loadUI && loadUI();
-}
-
-function addEventGivenTime(type,time) {
-  const tx = db.transaction("events", "readwrite");
-  tx.objectStore("events").add({ type, timestamp: time });
   tx.oncomplete = () => window.loadUI && loadUI();
 }
 
