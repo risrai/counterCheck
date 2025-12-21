@@ -9,8 +9,12 @@ req.onupgradeneeded = e => {
 
 req.onsuccess = e => {
   db = e.target.result;
-  if (window.loadUI) loadUI();
+
+  if (window.onDbReady) {
+    window.onDbReady();
+  }
 };
+
 
 function addEvent(type) {
   const tx = db.transaction("events", "readwrite");
