@@ -71,16 +71,21 @@ function analyzeMonth(events, year, month) {
     if (e.type !== "INCREMENT") return;
 
     const d = new Date(e.timestamp);
+
+    // ✅ Month filter FIRST
     if (d.getFullYear() !== year || d.getMonth() !== month) return;
 
     total++;
 
-    // Day-of-month (for chart)
+    // Day-of-month for graph
     const day = d.getDate();
     daily[day] = (daily[day] || 0) + 1;
 
     // Day-of-week
-    const weekDayName = WEEK_DAYS[d.getDay()];
+    const weekDayName = [
+      "Sunday","Monday","Tuesday","Wednesday",
+      "Thursday","Friday","Saturday"
+    ][d.getDay()];
     weekDays[weekDayName]++;
 
     // Time frame
@@ -94,6 +99,7 @@ function analyzeMonth(events, year, month) {
   renderChart(daily);
   updateSummary(weekDays, timeFrames, total);
 }
+
 
 function renderChart(data) {
   const ctx = document.getElementById("monthlyChart");
