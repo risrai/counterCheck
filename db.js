@@ -18,6 +18,12 @@ function addEvent(type) {
   tx.oncomplete = () => window.loadUI && loadUI();
 }
 
+function addEventGivenTime(type,time) {
+  const tx = db.transaction("events", "readwrite");
+  tx.objectStore("events").add({ type, timestamp: time });
+  tx.oncomplete = () => window.loadUI && loadUI();
+}
+
 function deleteLastEvent() {
   const tx = db.transaction("events", "readwrite");
   const store = tx.objectStore("events");
