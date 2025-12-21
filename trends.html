@@ -1,29 +1,115 @@
-
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Trends</title>
+
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <header>
-    <h2>Monthly Trends</h2>
-    <a href="index.html">⬅ Back</a>
-  </header>
 
-  <main>
-    <label>Select Month:
-      <input type="month" id="monthPicker">
-    </label>
+<header>
+  <h2>Monthly Trends</h2>
+  <a href="index.html">⬅ Back</a>
+</header>
 
-    <canvas id="monthlyChart"></canvas>
-  </main>
+<main>
+  <label>
+    Select Month:
+    <input type="month" id="monthPicker">
+  </label>
 
-  <script src="db.js"></script>
-  <script src="analytics.js"></script>
-  <script src="trends.js"></script>
+  <canvas id="monthlyChart"></canvas>
+
+  <div class="info">
+    <p><strong>Total entries this month:</strong> <span id="totalCount">0</span></p>
+    <p><strong>Most active time frame:</strong> <span id="activeTime">—</span></p>
+    <p><strong>Most active day:</strong> <span id="activeDay">—</span></p>
+  </div>
+</main>
+
+<script src="db.js"></script>
+<script src="analytics.js"></script>
+
+<script>
+let chart;
+
+document.getElementById("monthPicker").addEventListener("change", e => {
+  const [year, month] = e.target.value.split("-").map(Number);
+  getAllEvents(events => analyzeMonth(events, year, month - 1));
+});
+
+function analyzeMonth(events, year, month) {
+  const daily = {};
+  const timeFrames = {
+    "6–9 AM": 0,
+    "9 AM–7 PM": 0,
+    "7–11 PM": 0,
+    "11 PM–6 AM": 0
+  };
+
+  let total = 0;
+
+  events.forEach(e => {
+    if (e.type !== "INCREMENT") return;
+
+    const d = new Date(e.timestamp);
+    if (d.getFullYear() !== year || d.getMonth() !== month) return;
+
+    total++;
+
+    // Daily count
+    const day = d.getDate();
+    daily[day] = (daily[day] || 0) + 1;
+
+    // Time frame bucket
+    const h = d.getHours();
+    if (h >= 6 && h < 9) timeFrames["6–9 AM"]++;
+    else if (h >= 9 && h < 19) timeFrames["9 AM–7 PM"]++;
+    else if (h >= 19 && h < 23) timeFrames["7–11 PM"]++;
+    else timeFrames["11 PM–6 AM"]++;
+  });
+
+  renderChart(daily);
+  updateSummary(daily, timeFrames, total);
+}
+
+function renderChart(data) {
+  const ctx = document.getElementById("monthlyChart");
+  if (chart) chart.destroy();
+
+  chart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: Object.keys(data),
+      datasets: [{
+        label: "Daily Count",
+        data: Object.values(data),
+        tension: 0.3
+      }]
+    }
+  });
+}
+
+function updateSummary(daily, timeFrames, total) {
+  document.getElementById("totalCount").innerText = total;
+
+  // Most active time frame
+  const activeTime = Object.entries(timeFrames)
+    .sort((a, b) => b[1] - a[1])[0]?.[0] || "—";
+
+  document.getElementById("activeTime").innerText = activeTime;
+
+  // Most active day
+  const activeDay = Object.entries(daily)
+    .sort((a, b) => b[1] - a[1])[0]?.[0] || "—";
+
+  document.getElementById("activeDay").innerText =
+    activeDay !== "—" ? `Day ${activeDay}` : "—";
+}
+</script>
+
 </body>
 </html>
