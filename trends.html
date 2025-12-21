@@ -141,6 +141,15 @@ monthPicker.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
 // Trigger initial load
 monthPicker.dispatchEvent(new Event("change"));
 
+  const monthPicker = document.getElementById("monthPicker");
+
+window.onDbReady = () => {
+  const now = new Date();
+  monthPicker.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  monthPicker.dispatchEvent(new Event("change"));
+};
+
+
 </script>
 
 
