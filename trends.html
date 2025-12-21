@@ -125,6 +125,16 @@ function updateSummary(weekDays, timeFrames, total) {
 
   document.getElementById("activeDay").innerText = activeWeekDay;
 }
+
+  const monthPicker = document.getElementById("monthPicker");
+
+// Set current month as default
+const now = new Date();
+monthPicker.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+
+// Trigger initial load
+monthPicker.dispatchEvent(new Event("change"));
+
 </script>
 
 
