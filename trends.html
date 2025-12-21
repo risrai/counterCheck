@@ -36,6 +36,11 @@
 <script>
 let chart;
 
+const WEEK_DAYS = [
+  "Sunday", "Monday", "Tuesday", "Wednesday",
+  "Thursday", "Friday", "Saturday"
+];
+
 document.getElementById("monthPicker").addEventListener("change", e => {
   const [year, month] = e.target.value.split("-").map(Number);
   getAllEvents(events => analyzeMonth(events, year, month - 1));
@@ -43,6 +48,16 @@ document.getElementById("monthPicker").addEventListener("change", e => {
 
 function analyzeMonth(events, year, month) {
   const daily = {};
+  const weekDays = {
+    "Monday": 0,
+    "Tuesday": 0,
+    "Wednesday": 0,
+    "Thursday": 0,
+    "Friday": 0,
+    "Saturday": 0,
+    "Sunday": 0
+  };
+
   const timeFrames = {
     "6–9 AM": 0,
     "9 AM–7 PM": 0,
@@ -60,11 +75,15 @@ function analyzeMonth(events, year, month) {
 
     total++;
 
-    // Daily count
+    // Day-of-month (for chart)
     const day = d.getDate();
     daily[day] = (daily[day] || 0) + 1;
 
-    // Time frame bucket
+    // Day-of-week
+    const weekDayName = WEEK_DAYS[d.getDay()];
+    weekDays[weekDayName]++;
+
+    // Time frame
     const h = d.getHours();
     if (h >= 6 && h < 9) timeFrames["6–9 AM"]++;
     else if (h >= 9 && h < 19) timeFrames["9 AM–7 PM"]++;
@@ -73,7 +92,7 @@ function analyzeMonth(events, year, month) {
   });
 
   renderChart(daily);
-  updateSummary(daily, timeFrames, total);
+  updateSummary(weekDays, timeFrames, total);
 }
 
 function renderChart(data) {
@@ -93,23 +112,21 @@ function renderChart(data) {
   });
 }
 
-function updateSummary(daily, timeFrames, total) {
+function updateSummary(weekDays, timeFrames, total) {
   document.getElementById("totalCount").innerText = total;
 
-  // Most active time frame
   const activeTime = Object.entries(timeFrames)
     .sort((a, b) => b[1] - a[1])[0]?.[0] || "—";
 
   document.getElementById("activeTime").innerText = activeTime;
 
-  // Most active day
-  const activeDay = Object.entries(daily)
+  const activeWeekDay = Object.entries(weekDays)
     .sort((a, b) => b[1] - a[1])[0]?.[0] || "—";
 
-  document.getElementById("activeDay").innerText =
-    activeDay !== "—" ? `Day ${activeDay}` : "—";
+  document.getElementById("activeDay").innerText = activeWeekDay;
 }
 </script>
+
 
 </body>
 </html>
