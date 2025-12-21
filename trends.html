@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trends</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <h2>Monthly Trends</h2>
+    <a href="index.html">⬅ Back</a>
+  </header>
+
+  <main>
+    <label>Select Month:
+      <input type="month" id="monthPicker">
+    </label>
+
+    <canvas id="monthlyChart"></canvas>
+  </main>
+
+  <script src="db.js"></script>
+  <script src="analytics.js"></script>
+  <script src="trends.js"></script>
+</body>
+</html>

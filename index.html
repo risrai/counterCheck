@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Counter</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h2>Counter</h2>
+    <a href="trends.html">📈 Trends</a>
+  </header>
+
+  <main>
+    <div class="card">
+      <h1 id="counter">0</h1>
+      <button onclick="increment()">➕ Increment</button>
+      <button onclick="undo()">↩️ Undo</button>
+    </div>
+
+    <div class="info">
+      <p>Last Updated: <span id="lastUpdated">—</span></p>
+      <p>Entries this month: <span id="monthCount">0</span></p>
+    </div>
+  </main>
+
+  <script src="db.js"></script>
+  <script src="analytics.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
