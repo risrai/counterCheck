@@ -286,18 +286,31 @@ function renderChart(data) {
   const ctx = document.getElementById("monthlyChart");
   if (chart) chart.destroy();
 
-  chart = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: Object.keys(data),
-      datasets: [{
-        label: "Daily Count",
-        data: Object.values(data),
-        tension: 0.3,
-        backgroundColor:"#FE9900"
-      }]
+ chart = new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: Object.keys(data),
+    datasets: [{
+      label: "Daily Count",
+      data: Object.values(data),
+      tension: 0.3,
+      backgroundColor: "#FE9900",
+      borderColor: "#FE9900",
+      fill: false
+    }]
+  },
+  options: {
+    scales: {
+      y: {
+        ticks: {
+          stepSize: 1
+        },
+        beginAtZero: true
+      }
     }
-  });
+  }
+});
+
 }
 
 function updateSummary(weekDays, timeFrames, total) {
